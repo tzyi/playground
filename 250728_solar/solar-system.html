@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>太陽系動畫 - Solar System Animation</title>
+    <style>
+        /* 重置和基础样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* CSS自定义属性用于响应式设计 */
+        :root {
+            --sun-size: 8vmin;
+            --orbit-scale: 1vmin;
+            --animation-speed-factor: 1;
+            --planet-base-size: 1vmin;
+        }
+
+        body {
+            background: radial-gradient(circle at center, #0a0a2e 0%, #000000 70%);
+            font-family: Arial, sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* 星空背景 */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(2px 2px at 20px 30px, #fff, transparent),
+                radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.8), transparent),
+                radial-gradient(1px 1px at 90px 40px, #fff, transparent),
+                radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,0.6), transparent),
+                radial-gradient(2px 2px at 160px 30px, #fff, transparent);
+            background-repeat: repeat;
+            background-size: 200px 100px;
+            animation: twinkle 4s ease-in-out infinite alternate;
+            z-index: 1;
+        }
+
+        @keyframes twinkle {
+            0% { opacity: 0.8; }
+            100% { opacity: 1; }
+        }
+
+        /* 太阳系容器 */
+        .solar-system {
+            position: relative;
+            width: 90vmin;
+            height: 90vmin;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+        }
+
+        /* 太阳 */
+        .sun {
+            width: var(--sun-size);
+            height: var(--sun-size);
+            background: radial-gradient(circle at 30% 30%, #ffeb3b, #ff9800, #f44336);
+            border-radius: 50%;
+            position: absolute;
+            box-shadow: 
+                0 0 20px #ff9800,
+                0 0 40px #ff5722,
+                0 0 60px #ff5722;
+            animation: sun-pulse 4s ease-in-out infinite alternate;
+            z-index: 10;
+        }
+
+        @keyframes sun-pulse {
+            0% { 
+                transform: scale(1);
+                box-shadow: 
+                    0 0 20px #ff9800,
+                    0 0 40px #ff5722,
+                    0 0 60px #ff5722;
+            }
+            100% { 
+                transform: scale(1.05);
+                box-shadow: 
+                    0 0 25px #ff9800,
+                    0 0 50px #ff5722,
+                    0 0 75px #ff5722;
+            }
+        }
+
+        /* 轨道 */
+        .orbit {
+            position: absolute;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 50%;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* 轨道尺寸 */
+        .orbit-mercury { width: 15vmin; height: 15vmin; }
+        .orbit-venus { width: 20vmin; height: 20vmin; }
+        .orbit-earth { width: 25vmin; height: 25vmin; }
+        .orbit-mars { width: 32vmin; height: 32vmin; }
+        .orbit-jupiter { width: 42vmin; height: 42vmin; }
+        .orbit-saturn { width: 52vmin; height: 52vmin; }
+        .orbit-uranus { width: 62vmin; height: 62vmin; }
+        .orbit-neptune { width: 72vmin; height: 72vmin; }
+
+        /* 行星容器 */
+        .planet-container {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            will-change: transform;
+        }
+
+        /* 行星基础样式 */
+        .planet {
+            position: absolute;
+            border-radius: 50%;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* 水星 */
+        .mercury-container {
+            width: 15vmin;
+            height: 15vmin;
+            animation: orbit-mercury calc(8s / var(--animation-speed-factor)) linear infinite;
+        }
+        .mercury {
+            width: calc(var(--planet-base-size) * 0.8);
+            height: calc(var(--planet-base-size) * 0.8);
+            background: linear-gradient(45deg, #8c7853, #a0916a);
+            transform: translate(-50%, -50%) translateX(7.5vmin);
+        }
+
+        /* 金星 */
+        .venus-container {
+            width: 20vmin;
+            height: 20vmin;
+            animation: orbit-venus calc(12s / var(--animation-speed-factor)) linear infinite;
+        }
+        .venus {
+            width: calc(var(--planet-base-size) * 1.1);
+            height: calc(var(--planet-base-size) * 1.1);
+            background: linear-gradient(45deg, #ffc649, #ff8c42);
+            transform: translate(-50%, -50%) translateX(10vmin);
+        }
+
+        /* 地球 */
+        .earth-container {
+            width: 25vmin;
+            height: 25vmin;
+            animation: orbit-earth calc(16s / var(--animation-speed-factor)) linear infinite;
+        }
+        .earth {
+            width: calc(var(--planet-base-size) * 1.2);
+            height: calc(var(--planet-base-size) * 1.2);
+            background: linear-gradient(45deg, #4285f4, #34a853, #0f9d58);
+            transform: translate(-50%, -50%) translateX(12.5vmin);
+            position: relative;
+        }
+        .earth::after {
+            content: '';
+            position: absolute;
+            width: 30%;
+            height: 30%;
+            background: #8d6e63;
+            border-radius: 50%;
+            top: 20%;
+            left: 60%;
+            animation: moon-orbit 2s linear infinite;
+        }
+
+        @keyframes moon-orbit {
+            0% { transform: rotate(0deg) translateX(150%) rotate(0deg); }
+            100% { transform: rotate(360deg) translateX(150%) rotate(-360deg); }
+        }
+
+        /* 火星 */
+        .mars-container {
+            width: 32vmin;
+            height: 32vmin;
+            animation: orbit-mars calc(24s / var(--animation-speed-factor)) linear infinite;
+        }
+        .mars {
+            width: calc(var(--planet-base-size) * 1.0);
+            height: calc(var(--planet-base-size) * 1.0);
+            background: linear-gradient(45deg, #cd5c5c, #a0522d);
+            transform: translate(-50%, -50%) translateX(16vmin);
+        }
+
+        /* 木星 */
+        .jupiter-container {
+            width: 42vmin;
+            height: 42vmin;
+            animation: orbit-jupiter calc(36s / var(--animation-speed-factor)) linear infinite;
+        }
+        .jupiter {
+            width: calc(var(--planet-base-size) * 2.5);
+            height: calc(var(--planet-base-size) * 2.5);
+            background: linear-gradient(45deg, #d2691e, #ff8c00, #b8860b);
+            transform: translate(-50%, -50%) translateX(21vmin);
+        }
+
+        /* 土星 */
+        .saturn-container {
+            width: 52vmin;
+            height: 52vmin;
+            animation: orbit-saturn calc(48s / var(--animation-speed-factor)) linear infinite;
+        }
+        .saturn {
+            width: calc(var(--planet-base-size) * 2.2);
+            height: calc(var(--planet-base-size) * 2.2);
+            background: linear-gradient(45deg, #ffd700, #daa520);
+            transform: translate(-50%, -50%) translateX(26vmin);
+            position: relative;
+        }
+        .saturn::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            border: 2px solid rgba(255, 215, 0, 0.5);
+            border-radius: 50%;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%) scaleY(0.2);
+        }
+
+        /* 天王星 */
+        .uranus-container {
+            width: 62vmin;
+            height: 62vmin;
+            animation: orbit-uranus calc(60s / var(--animation-speed-factor)) linear infinite;
+        }
+        .uranus {
+            width: calc(var(--planet-base-size) * 1.8);
+            height: calc(var(--planet-base-size) * 1.8);
+            background: linear-gradient(45deg, #4fc3f7, #29b6f6);
+            transform: translate(-50%, -50%) translateX(31vmin);
+        }
+
+        /* 海王星 */
+        .neptune-container {
+            width: 72vmin;
+            height: 72vmin;
+            animation: orbit-neptune calc(72s / var(--animation-speed-factor)) linear infinite;
+        }
+        .neptune {
+            width: calc(var(--planet-base-size) * 1.7);
+            height: calc(var(--planet-base-size) * 1.7);
+            background: linear-gradient(45deg, #1976d2, #0d47a1);
+            transform: translate(-50%, -50%) translateX(36vmin);
+        }
+
+        /* 轨道动画 */
+        @keyframes orbit-mercury {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        @keyframes orbit-venus {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        @keyframes orbit-earth {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        @keyframes orbit-mars {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        @keyframes orbit-jupiter {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        @keyframes orbit-saturn {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        @keyframes orbit-uranus {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        @keyframes orbit-neptune {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            :root {
+                --sun-size: 6vmin;
+                --planet-base-size: 0.8vmin;
+                --animation-speed-factor: 0.8;
+            }
+        }
+
+        @media (max-height: 600px) {
+            .solar-system {
+                width: 80vmin;
+                height: 80vmin;
+            }
+        }
+
+        /* 减少动画(为可访问性) */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 20s !important;
+                animation-timing-function: ease-in-out !important;
+            }
+        }
+
+        /* 标题和控制面板 */
+        .controls {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: white;
+            z-index: 100;
+            font-size: 14px;
+        }
+
+        .title {
+            font-size: 24px;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .info {
+            opacity: 0.8;
+            line-height: 1.5;
+        }
+
+        /* 行星标签 */
+        .planet-label {
+            position: absolute;
+            color: white;
+            font-size: 0.8vmin;
+            transform: translate(-50%, -150%);
+            opacity: 0.7;
+            pointer-events: none;
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+        }
+
+        /* 悬停效果 */
+        .planet:hover + .planet-label {
+            opacity: 1;
+            font-size: 1vmin;
+        }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <div class="title">太陽系動畫</div>
+        <div class="info">
+            Solar System Animation<br>
+            8大行星軌道運動模擬<br>
+            CSS動畫
+        </div>
+    </div>
+
+    <div class="solar-system">
+        <!-- 太阳 -->
+        <div class="sun"></div>
+
+        <!-- 轨道线 -->
+        <div class="orbit orbit-mercury"></div>
+        <div class="orbit orbit-venus"></div>
+        <div class="orbit orbit-earth"></div>
+        <div class="orbit orbit-mars"></div>
+        <div class="orbit orbit-jupiter"></div>
+        <div class="orbit orbit-saturn"></div>
+        <div class="orbit orbit-uranus"></div>
+        <div class="orbit orbit-neptune"></div>
+
+        <!-- 水星 -->
+        <div class="planet-container mercury-container">
+            <div class="planet mercury"></div>
+            <div class="planet-label">水星 Mercury</div>
+        </div>
+
+        <!-- 金星 -->
+        <div class="planet-container venus-container">
+            <div class="planet venus"></div>
+            <div class="planet-label">金星 Venus</div>
+        </div>
+
+        <!-- 地球 -->
+        <div class="planet-container earth-container">
+            <div class="planet earth"></div>
+            <div class="planet-label">地球 Earth</div>
+        </div>
+
+        <!-- 火星 -->
+        <div class="planet-container mars-container">
+            <div class="planet mars"></div>
+            <div class="planet-label">火星 Mars</div>
+        </div>
+
+        <!-- 木星 -->
+        <div class="planet-container jupiter-container">
+            <div class="planet jupiter"></div>
+            <div class="planet-label">木星 Jupiter</div>
+        </div>
+
+        <!-- 土星 -->
+        <div class="planet-container saturn-container">
+            <div class="planet saturn"></div>
+            <div class="planet-label">土星 Saturn</div>
+        </div>
+
+        <!-- 天王星 -->
+        <div class="planet-container uranus-container">
+            <div class="planet uranus"></div>
+            <div class="planet-label">天王星 Uranus</div>
+        </div>
+
+        <!-- 海王星 -->
+        <div class="planet-container neptune-container">
+            <div class="planet neptune"></div>
+            <div class="planet-label">海王星 Neptune</div>
+        </div>
+    </div>
+</body>
+</html>
